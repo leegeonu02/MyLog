@@ -37,3 +37,28 @@
 ```bash
 git clone https://github.com/leegeonu02/MyLog.git
 cd MyLog
+
+---
+
+## 커밋 메시지 규칙
+
+| 타입         | 설명                            |
+| ---------- | ----------------------------- |
+| `feat`     | 새로운 기능 추가                     |
+| `fix`      | 버그 수정                         |
+| `docs`     | 문서 수정 (README 등)              |
+| `style`    | 코드 포맷팅, 세미콜론, 공백 등 (기능 변화 없음) |
+| `refactor` | 코드 리팩토링 (기능 변화 없음)            |
+| `test`     | 테스트 코드 추가/수정                  |
+| `chore`    | 빌드 설정, 패키지 설치 등 기타 잡일         |
+| `perf`     | 성능 개선                         |
+
+### 예시
+- feat: 다이어리 작성 기능 추가
+- fix(diary): 작성 시 날짜 저장 오류 수정
+- docs: README에 프로젝트 소개 작성
+- refactor(user): JWT 인증 로직 리팩토링
+- style: controller 패키지 import 정리
+- chore: .gitignore에 application.yml 추가
+
+---
