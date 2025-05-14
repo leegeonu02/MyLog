@@ -1,6 +1,7 @@
 package com.leegeonu.mylog.config;
 
 import com.leegeonu.mylog.jwt.JwtAuthenticationFilter;
+import com.leegeonu.mylog.jwt.JwtAuthorizationFilter;
 import com.leegeonu.mylog.jwt.JwtUtil;
 import com.leegeonu.mylog.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -25,20 +26,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManager authManager = authenticationConfiguration.getAuthenticationManager();
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(authManager, jwtUtil);
-        jwtFilter.setFilterProcessesUrl("/login");
 
-        http
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authManager, jwtUtil);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+
+        return http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/signup", "/login").permitAll()
+                .requestMatchers("/h2-console/**", "/signup", "/login", "/hello").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilter(jwtFilter);
-
-        return http.build();
+            .addFilter(jwtAuthenticationFilter)
+            .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), JwtAuthenticationFilter.class)
+            .build(); 
     }
 
     @Bean
@@ -53,7 +55,7 @@ public class SecurityConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
-        config.addExposedHeader("Authorization");
+        config.addExposedHeader("Authorization"); // 토큰 노출 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

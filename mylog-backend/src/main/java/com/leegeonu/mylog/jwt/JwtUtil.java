@@ -22,11 +22,16 @@ public class JwtUtil {
     }
 
     public String validateAndGetUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (JwtException e) {
+            System.out.println("❌ JWT 토큰 검증 실패: " + e.getMessage());
+            return null;
+        }
     }
 }
